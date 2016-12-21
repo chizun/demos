@@ -10,5 +10,6 @@
 
 @interface RootViewController : UIViewController
 
+@property (nonatomic, strong) NSString              *remindString;
     
 @end

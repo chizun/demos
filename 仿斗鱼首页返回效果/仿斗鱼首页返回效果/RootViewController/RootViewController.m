@@ -10,11 +10,18 @@
 #import "SecondViewController.h"
 #define HEIGHT [UIScreen mainScreen].bounds.size.height
 #define WIDTH [UIScreen mainScreen].bounds.size.width
+
+typedef void(^showHeaderRemindBlock)(NSString *remindString);
+
 @interface RootViewController ()
  
-    @property (nonatomic, strong) UIView      *headRemindView;   //顶部提醒视图
-    @property (nonatomic, strong) UILabel     *remindLabel;      //顶部提示文字视图
-    @property (nonatomic, strong) UIButton    *pushButton;       //跳转按钮
+    @property (nonatomic, strong) UIView                *headRemindView;   //顶部提醒视图
+    @property (nonatomic, strong) UILabel               *remindLabel;      //顶部提示文字视图
+    @property (nonatomic, strong) UIButton              *pushButton;       //跳转按钮
+    @property (nonatomic, copy)   showHeaderRemindBlock showRemindBlock;   //展示头部提示视图Block
+ 
+    
+
 @end
 
 @implementation RootViewController
@@ -35,6 +42,7 @@
 }
     
 -(void)viewWillAppear:(BOOL)animated{
+
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
@@ -44,6 +52,11 @@
 -(void)pushAction{
     SecondViewController *secondViewCtrl = [[SecondViewController alloc]init];
     [self.navigationController pushViewController:secondViewCtrl animated:YES];
+}
+    
+-(void)showRemindViewAnimation{
+    
+    
 }
 #pragma mark -- Lazy Load
     
@@ -85,4 +98,20 @@
     return _pushButton;
 }
 
+-(showHeaderRemindBlock)showRemindBlock{
+    
+    if (!_showRemindBlock){
+        
+        
+        __weak typeof(self) weakSelf = self;
+        _showRemindBlock = ^(NSString *remindString){
+            
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            strongSelf.remindLabel.text = remindString;
+        
+        };
+    }
+    
+    return _showRemindBlock;
+}
 @end
